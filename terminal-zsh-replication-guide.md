@@ -2,6 +2,8 @@
 
 **Audience:** A future coding agent (or human) setting up a **new macOS computer** to match the user’s prior shell environment.
 
+**Repository:** This project is **public** — do not add secrets or identifiers that should stay private when editing docs or configs (see `AGENTS.md` in the repo root).
+
 **Source of truth:** This document was produced from `~/.zshrc` as used on the reference machine. If the user’s config drifts, re-read `~/.zshrc` and update this file.
 
 ---
@@ -60,7 +62,7 @@ Treat **Oh My Zsh + theme + plugins** as the **minimum** for “same prompt + `g
 ### 3.3 Optional: copy or merge full `~/.zshrc`
 
 - Safest: copy the user’s backed-up `~/.zshrc` from the old machine, then **fix machine-specific paths**:
-  - Replace `/Users/shanemyrick` with the new user’s home if anything is hardcoded (e.g. `~/.rhai-test/bin`).
+  - Replace any hardcoded `/Users/oldusername` with `$HOME` or the new account’s path (e.g. `~/.rhai-test/bin`).
   - Adjust **NVM** Homebrew paths if the new Mac is Intel (`/usr/local/opt/nvm`) vs Apple Silicon (`/opt/homebrew/opt/nvm`).
 - Remove duplicate lines if merging (reference had `source ~/.rover-completion.zsh` twice and `grafbase` `PATH` twice — dedupe when cleaning).
 
@@ -74,7 +76,6 @@ Treat **Oh My Zsh + theme + plugins** as the **minimum** for “same prompt + `g
 | **Postgres.app** | Local Postgres client tools | Test `which psql` after app install |
 | **Grafbase CLI** | `grafbase` on PATH | `which grafbase` |
 | **Rover** | Apollo CLI + completions | `rover --version`; completions only if `~/.rover-completion.zsh` exists |
-| **WebStorm** | `webstorm` alias | `alias webstorm` |
 
 ### 3.5 Editor / terminal appearance (Cursor or VS Code)
 
@@ -177,4 +178,4 @@ source $ZSH/oh-my-zsh.sh
 
 When the user changes their stack, update **sections 1, 3.4, and 4.5** so the next agent does not install obsolete tools. Optionally attach a dated export of `~/.zshrc` next to this file for byte-level comparison.
 
-**Last aligned with:** `~/.zshrc` on the machine where this guide was generated (user: `shanemyrick`).
+**Last aligned with:** `~/.zshrc` on the reference machine when this guide was generated (sync with repo `zsh/zshrc` after edits).

@@ -1,2 +1,12 @@
 .idea/
 Brewfile.lock.json
+
+# Reduce risk of committing local secrets by mistake (public repo)
+.env
+.env.*
+!.env.example
+*.pem
+id_rsa
+id_ed25519
+secrets/
+.secrets

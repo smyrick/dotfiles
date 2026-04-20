@@ -48,11 +48,6 @@ fi
 # --- Optional: Apollo Rover completions (source once) ---
 [[ -f "$HOME/.rover-completion.zsh" ]] && source "$HOME/.rover-completion.zsh"
 
-# --- Optional: WebStorm ---
-if [[ -d "/Applications/WebStorm.app" ]]; then
-  alias webstorm='open -na "WebStorm.app"'
-fi
-
 # --- Optional: apm project (uncomment and set path if you use this tool) ---
 # if [[ -d "$HOME/path/to/apm-repo" ]]; then
 #   alias apm='(cd "$HOME/path/to/apm-repo" && cargo run --bin apm --)'

@@ -2,6 +2,8 @@
 
 Personal macOS shell setup: **zsh**, **Oh My Zsh**, **Homebrew**, and optional tooling so you can clone this repo on a new machine and get running quickly.
 
+**This repository is public.** Do not commit secrets, credentials, or private keys—see [`AGENTS.md`](AGENTS.md).
+
 ## Prerequisites
 
 - **macOS** (this repo targets macOS paths such as Homebrew on Apple Silicon or Intel).
@@ -33,7 +35,7 @@ Personal macOS shell setup: **zsh**, **Oh My Zsh**, **Homebrew**, and optional t
 
    - Warn if Command Line Tools look missing.
    - Install **Homebrew** if it is not on your `PATH` (the official installer may prompt for your password or **Return**—that is normal).
-   - Run **`brew bundle install`** using the repo’s [`Brewfile`](Brewfile) (currently **atuin** and **nvm**).
+   - Run **`brew bundle install`** using the repo’s [`Brewfile`](Brewfile) (currently **nvm**).
    - Install **Oh My Zsh** if `~/.oh-my-zsh` is missing (unattended; it does not switch your login shell by default).
    - Offer to replace **`~/.zshrc`** with a **symlink** to [`zsh/zshrc`](zsh/zshrc). If you already have a `~/.zshrc`, you can **back it up** (timestamped under `~/.zshrc.pre-dotfiles.*`), **skip**, or **abort**.
 
@@ -67,7 +69,7 @@ brew bundle install --file=Brewfile
 
 ## Optional: shell history (atuin)
 
-If **atuin** is installed (via Brewfile), run **`atuin register`** / **`atuin login`** as needed for sync. See the [atuin documentation](https://docs.atuin.sh/).
+If you install **[atuin](https://docs.atuin.sh/)** yourself (not via this Brewfile), your [`zsh/zshrc`](zsh/zshrc) will initialize it when the binary is on `PATH`. Run **`atuin register`** / **`atuin login`** as needed for sync.
 
 ## Optional: terminal look in Cursor / VS Code
 
