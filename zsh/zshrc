@@ -1,0 +1,62 @@
+# Kiro CLI pre — keep first
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+COMPLETION_WAITING_DOTS="true"
+
+plugins=(
+  git
+  dotenv
+  macos
+)
+
+source "$ZSH/oh-my-zsh.sh"
+
+# --- Optional: atuin (shell history) ---
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh)"
+fi
+
+# --- Optional: Volta (Node toolchain) ---
+if [[ -d "$HOME/.volta" ]]; then
+  export VOLTA_HOME="$HOME/.volta"
+  export PATH="$VOLTA_HOME/bin:$PATH"
+fi
+
+# --- Optional: nvm (Homebrew formula; Apple Silicon vs Intel) ---
+export NVM_DIR="$HOME/.nvm"
+if [[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]]; then
+  # shellcheck source=/dev/null
+  source "/opt/homebrew/opt/nvm/nvm.sh"
+elif [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
+  # shellcheck source=/dev/null
+  source "/usr/local/opt/nvm/nvm.sh"
+fi
+
+# --- Optional: Postgres.app client tools ---
+POSTGRESAPP_BIN="/Applications/Postgres.app/Contents/Versions/latest/bin"
+if [[ -d "$POSTGRESAPP_BIN" ]]; then
+  export PATH="$POSTGRESAPP_BIN:$PATH"
+fi
+
+# --- Optional: Grafbase CLI ---
+if [[ -d "$HOME/.grafbase/bin" ]]; then
+  export PATH="$HOME/.grafbase/bin:$PATH"
+fi
+
+# --- Optional: Apollo Rover completions (source once) ---
+[[ -f "$HOME/.rover-completion.zsh" ]] && source "$HOME/.rover-completion.zsh"
+
+# --- Optional: WebStorm ---
+if [[ -d "/Applications/WebStorm.app" ]]; then
+  alias webstorm='open -na "WebStorm.app"'
+fi
+
+# --- Optional: apm project (uncomment and set path if you use this tool) ---
+# if [[ -d "$HOME/path/to/apm-repo" ]]; then
+#   alias apm='(cd "$HOME/path/to/apm-repo" && cargo run --bin apm --)'
+# fi
+
+# Kiro CLI post — keep last
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
