@@ -37,7 +37,7 @@ Personal macOS shell setup: **zsh**, **Oh My Zsh**, **Homebrew**, and optional t
    - Install **Homebrew** if it is not on your `PATH` (the official installer may prompt for your password or **Return**—that is normal).
    - Run **`brew bundle install`** using the repo’s [`Brewfile`](Brewfile) (currently **nvm**).
    - Install **Oh My Zsh** if `~/.oh-my-zsh` is missing (unattended; it does not switch your login shell by default).
-   - Offer to replace **`~/.zshrc`** with a **symlink** to [`zsh/zshrc`](zsh/zshrc). If you already have a `~/.zshrc`, you can **back it up** (timestamped under `~/.zshrc.pre-dotfiles.*`), **skip**, or **abort**.
+   - Offer to replace **`~/.zprofile`** and **`~/.zshrc`** with symlinks to [`zsh/zprofile`](zsh/zprofile) and [`zsh/zshrc`](zsh/zshrc). Existing files can be backed up, skipped, or left unchanged by aborting.
 
 3. Open a **new terminal** window or run:
 
@@ -47,6 +47,7 @@ Personal macOS shell setup: **zsh**, **Oh My Zsh**, **Homebrew**, and optional t
 
 ## What gets linked
 
+- **`~/.zprofile`** → **`<repo>/zsh/zprofile`** (symlink).
 - **`~/.zshrc`** → **`<repo>/zsh/zshrc`** (symlink).
 
    Pulling updates to this repository updates your shell config on the next new shell without copying files again.

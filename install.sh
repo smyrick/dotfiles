@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Bootstrap dotfiles on macOS: Homebrew, Brewfile packages, Oh My Zsh, symlink ~/.zshrc.
+# Bootstrap dotfiles on macOS: Homebrew, Brewfile packages, Oh My Zsh, and zsh config.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$SCRIPT_DIR"
 SOURCE_ZSHRC="$REPO_ROOT/zsh/zshrc"
 TARGET_ZSHRC="${HOME}/.zshrc"
+SOURCE_ZPROFILE="$REPO_ROOT/zsh/zprofile"
+TARGET_ZPROFILE="${HOME}/.zprofile"
 BREWFILE="$REPO_ROOT/Brewfile"
 
 die() {
@@ -85,56 +87,59 @@ install_oh_my_zsh_if_needed() {
   RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 }
 
-prompt_and_link_zshrc() {
-  [[ -f "$SOURCE_ZSHRC" ]] || die "Missing source zshrc at $SOURCE_ZSHRC"
+prompt_and_link_shell_file() {
+  local source_path="$1"
+  local target_path="$2"
+  local display_name="$3"
 
   local src_real
-  src_real="$(resolve_realpath "$SOURCE_ZSHRC")"
+  [[ -f "$source_path" ]] || die "Missing source $display_name at $source_path"
+  src_real="$(resolve_realpath "$source_path")"
 
-  if [[ -e "$TARGET_ZSHRC" ]] || [[ -L "$TARGET_ZSHRC" ]]; then
+  if [[ -e "$target_path" ]] || [[ -L "$target_path" ]]; then
     local dst_real
-    dst_real="$(resolve_realpath "$TARGET_ZSHRC")"
+    dst_real="$(resolve_realpath "$target_path")"
 
     if [[ "$src_real" == "$dst_real" ]]; then
-      echo "~/.zshrc already points at this repo's zsh/zshrc."
+      echo "~/.$display_name already points at this repo's zsh/$display_name."
       return 0
     fi
 
     echo ""
-    echo "Existing ~/.zshrc does not match this repo's symlink target."
-    if [[ -L "$TARGET_ZSHRC" ]]; then
-      echo "  Current symlink: $(readlink "$TARGET_ZSHRC")"
+    echo "Existing ~/.$display_name does not match this repo's symlink target."
+    if [[ -L "$target_path" ]]; then
+      echo "  Current symlink: $(readlink "$target_path")"
     else
-      echo "  Current path: $TARGET_ZSHRC (regular file)"
+      echo "  Current path: $target_path (regular file)"
     fi
-    echo "  Desired target: $SOURCE_ZSHRC"
+    echo "  Desired target: $source_path"
     echo ""
-    echo "  [B] Backup existing ~/.zshrc and replace with symlink to repo"
-    echo "  [S] Skip — leave ~/.zshrc unchanged"
+    echo "  [B] Backup existing ~/.$display_name and replace with symlink to repo"
+    echo "  [S] Skip - leave ~/.$display_name unchanged"
     echo "  [A] Abort install (default)"
     read -r -p "Choose [B/s/A]: " choice || true
 
     local c="${choice:-A}"
     case "$(echo "$c" | tr '[:upper:]' '[:lower:]')" in
       b)
-        local backup="${HOME}/.zshrc.pre-dotfiles.$(date +%Y%m%d%H%M%S)"
-        mv "$TARGET_ZSHRC" "$backup"
+        local backup="${target_path}.pre-dotfiles.$(date +%Y%m%d%H%M%S)"
+        mv "$target_path" "$backup"
         echo "Backed up to $backup"
-        ln -sf "$SOURCE_ZSHRC" "$TARGET_ZSHRC"
-        echo "Symlinked $TARGET_ZSHRC -> $SOURCE_ZSHRC"
+        ln -sf "$source_path" "$target_path"
+        echo "Symlinked $target_path -> $source_path"
         ;;
       s)
-        echo "Skipped linking ~/.zshrc. Use your backup or merge manually, then re-run if needed."
+        echo "Skipped linking ~/.$display_name. Use your backup or merge manually, then re-run if needed."
         return 0
         ;;
       *)
-        echo "Aborted; ~/.zshrc unchanged."
+        echo "Aborted; ~/.$display_name unchanged."
         exit 4
         ;;
     esac
   else
-    ln -sf "$SOURCE_ZSHRC" "$TARGET_ZSHRC"
-    echo "Symlinked $TARGET_ZSHRC -> $SOURCE_ZSHRC"
+    ln -sf "$source_path" "$target_path"
+    echo "Symlinked $target_path -> $source_path"
   fi
 }
 
@@ -151,7 +156,8 @@ main() {
 
   run_brew_bundle
   install_oh_my_zsh_if_needed
-  prompt_and_link_zshrc
+  prompt_and_link_shell_file "$SOURCE_ZPROFILE" "$TARGET_ZPROFILE" "zprofile"
+  prompt_and_link_shell_file "$SOURCE_ZSHRC" "$TARGET_ZSHRC" "zshrc"
 
   echo ""
   echo "Done. Open a new terminal or run: exec zsh"
