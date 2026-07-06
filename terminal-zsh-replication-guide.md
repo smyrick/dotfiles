@@ -15,20 +15,21 @@
 | **Prompt look** (green arrow, blue path segment, `~` for home) | Oh My Zsh theme **`robbyrussell`** |
 | **Git shortcuts** (`gst`, `gco`, etc.) | Oh My Zsh **`git`** plugin |
 | **Extra Oh My Zsh behavior** | Plugins **`dotenv`**, **`macos`**; **`COMPLETION_WAITING_DOTS`** |
+| **Bootstrap CLIs** | Homebrew installs **`nvm`** and **`gh`** from the repo `Brewfile` |
 | **Kiro CLI integration** | Sourced **pre** and **post** zsh snippets from Kiro’s Application Support path |
 | **History search (atuin)** | `eval "$(atuin init zsh)"` — requires separate **atuin** install/login |
 | **Node / JS toolchain** | **Volta** (`~/.volta`), **NVM** (Homebrew path on Apple Silicon) |
 | **DB / GraphQL tooling** | **Postgres.app** bin on `PATH`, **Grafbase** `~/.grafbase/bin`, **Apollo Rover** completion file |
 | **Custom alias** | `apm` → `cargo run --bin apm --` (only if that project exists) |
 
-Treat **Oh My Zsh + theme + plugins** as the **minimum** for “same prompt + `gst`.” Everything else is **optional** unless the user explicitly wants full parity.
+Treat **Oh My Zsh + theme + plugins + Brewfile tools (`nvm`, `gh`)** as the bootstrap baseline. Everything else is **optional** unless the user explicitly wants full parity.
 
 ---
 
 ## 2. Prerequisites (new machine)
 
 - **macOS** with **zsh** as the login shell (default).
-- **Homebrew** (`/opt/homebrew` on Apple Silicon) if you will install **nvm** or other tools via Brew paths referenced in the config.
+- **Homebrew** (`/opt/homebrew` on Apple Silicon) for Brewfile tools such as **nvm** and **gh**.
 - **Git** installed (for `gst` to be meaningful).
 - Network access to install Oh My Zsh, Homebrew packages, and optional CLIs.
 
@@ -62,18 +63,29 @@ Treat **Oh My Zsh + theme + plugins** as the **minimum** for “same prompt + `g
 ### 3.3 Optional: copy or merge full `~/.zshrc`
 
 - Safest: copy the user’s backed-up `~/.zshrc` from the old machine, then **fix machine-specific paths**:
-  - Replace any hardcoded `/Users/oldusername` with `$HOME` or the new account’s path (e.g. `~/.rhai-test/bin`).
+  - Replace old account paths with `$HOME` or the new account’s path (for example, `~/.rhai-test/bin`).
   - Adjust **NVM** Homebrew paths if the new Mac is Intel (`/usr/local/opt/nvm`) vs Apple Silicon (`/opt/homebrew/opt/nvm`).
 - Remove duplicate lines if merging (reference had `source ~/.rover-completion.zsh` twice and `grafbase` `PATH` twice — dedupe when cleaning).
 
-### 3.4 Optional tools (install only if parity is required)
+### 3.4 Bootstrap and optional tools
+
+Installed by this repo:
+
+| Tool | Purpose | Validation hint |
+|------|---------|-----------------|
+| **nvm** (Homebrew) | Node versions | `[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]` then `nvm --version` |
+| **gh** | GitHub CLI | `gh --version` |
+
+Optional/manual extras (install only if parity is required):
 
 | Tool | Purpose | Validation hint |
 |------|---------|-----------------|
 | **atuin** | Sync/search shell history | `atuin --version`; `which atuin` |
 | **Volta** | Node version manager | `which volta`; `volta --version` |
-| **nvm** (Homebrew) | Node versions | `[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]` then `nvm --version` |
-| **Postgres.app** | Local Postgres client tools | Test `which psql` after app install |
+| **Docker / Colima** | Containers and local Docker-compatible runtime | `docker --version`; `colima version` |
+| **Postgres / Postgres.app** | Local Postgres client tools | Test `which psql` after install |
+| **Rust** | Rust toolchain | `rustc --version`; `cargo --version` |
+| **Codex** | Local Codex tooling | `codex --version` |
 | **Grafbase CLI** | `grafbase` on PATH | `which grafbase` |
 | **Rover** | Apollo CLI + completions | `rover --version`; completions only if `~/.rover-completion.zsh` exists |
 
@@ -119,13 +131,14 @@ Run these in a **new terminal window** after editing `~/.zshrc` (or run `exec zs
 
 If Kiro is **not** installed, validation passes if zsh starts without errors and the conditional sources are skipped.
 
-### 4.5 Optional components
+### 4.5 Bootstrap and optional components
 
 | Component | Command | Expected |
 |-----------|---------|----------|
+| gh | `gh --version` | Version output |
+| nvm | `command -v nvm` | `nvm` as shell function after sourcing |
 | atuin | `which atuin` | Path to binary |
 | Volta | `which volta` | Path under `~/.volta` or install location |
-| nvm | `command -v nvm` | `nvm` as shell function after sourcing |
 | Rover completion | `test -f ~/.rover-completion.zsh && echo ok` | `ok` if file copied |
 
 ### 4.6 End-to-end “feels right” test
@@ -142,6 +155,7 @@ If Kiro is **not** installed, validation passes if zsh starts without errors and
 - **`gst: command not found`:** Oh My Zsh `git` plugin not loaded — check `plugins=(... git ...)` and that `source $ZSH/oh-my-zsh.sh` runs **after** `plugins=`.
 - **Plain prompt, no colors:** Theme not set or overridden — verify `ZSH_THEME="robbyrussell"` and no other prompt theme framework runs after Oh My Zsh.
 - **Errors on shell start:** Comment out optional blocks (atuin, nvm, Kiro) one by one; fix paths for Intel vs Apple Silicon Homebrew.
+- **Homebrew permission/cache errors:** If `brew bundle` reports non-writable Cellar or cache paths, restore ownership to the local account, for example `sudo chown -R "$USER" "$(brew --prefix)/Cellar"` and the affected `$HOME/Library/Caches/Homebrew` path. Re-run `brew doctor` before changing this repo.
 - **Kiro errors:** Ensure pre/post blocks stay at top/bottom; use `-f` tests before `source`.
 
 ---

@@ -35,7 +35,7 @@ Personal macOS shell setup: **zsh**, **Oh My Zsh**, **Homebrew**, and optional t
 
    - Warn if Command Line Tools look missing.
    - Install **Homebrew** if it is not on your `PATH` (the official installer may prompt for your password or **Return**—that is normal).
-   - Run **`brew bundle install`** using the repo’s [`Brewfile`](Brewfile) (currently **nvm**).
+   - Run **`brew bundle install`** using the repo’s [`Brewfile`](Brewfile) (currently **nvm** and **gh**).
    - Install **Oh My Zsh** if `~/.oh-my-zsh` is missing (unattended; it does not switch your login shell by default).
    - Offer to replace **`~/.zprofile`** and **`~/.zshrc`** with symlinks to [`zsh/zprofile`](zsh/zprofile) and [`zsh/zshrc`](zsh/zshrc). Existing files can be backed up, skipped, or left unchanged by aborting.
 
@@ -65,7 +65,7 @@ brew bundle install --file=Brewfile
 
 ## Documentation and validation
 
-- **[terminal-zsh-replication-guide.md](terminal-zsh-replication-guide.md)** — full replication checklist for humans and agents (Oh My Zsh theme/plugins, optional Kiro, atuin, Volta, Grafbase, Rover, Postgres.app, troubleshooting).
+- **[terminal-zsh-replication-guide.md](terminal-zsh-replication-guide.md)** — full replication checklist for humans and agents (Oh My Zsh theme/plugins, bootstrap CLIs, optional Kiro, atuin, Volta, Grafbase, Rover, Postgres.app, troubleshooting).
 - After setup, use **section 4** of that guide to validate `gst`, theme, plugins, and optional components.
 
 ## Optional: shell history (atuin)
